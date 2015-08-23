@@ -1,4 +1,11 @@
-
+---
+layout:     post
+title:      "Second crawl"
+subtitle:   "On plotting and modelling"
+date:       2015-08-22 12:00:00
+author:     "Eardil"
+header-img: "img/post-bg-01.jpg"
+---
 In the [last post](http://eardil.github.io/2015/08/19/first-crawl/) I defined a function that perform simulations for the birthday candle problem. This time I want to use it to visualize what happens if I change the parameters of the problem by using this function:
 
 
@@ -24,7 +31,7 @@ I need to load another library, which is the "standard" one for plotting and it'
     import matplotlib.pyplot as plt
     %matplotlib inline
 
-Let's begin by generating for candles from $1$ to $500$ and sampling 5 times
+Let's begin by generating for candles from $$1$$ to $$500$$ and sampling 5 times.
 
 
     M=5
@@ -34,7 +41,7 @@ Let's begin by generating for candles from $1$ to $500$ and sampling 5 times
     for n in range(1,N+1):
         K[n-1]=candles(n,M)
 
-For plotting, you "create" the plot, then make customizations (like labels and colors), and the you `show` it.
+For plotting, you "create" the plot, then make customizations (like labels and colors), and then you `show` it.
 
 
     plt.plot(K)
@@ -46,7 +53,7 @@ For plotting, you "create" the plot, then make customizations (like labels and c
 ![png](2015-08-22-second-crawl_files/2015-08-22-second-crawl_8_0.png)
 
 
-Nice enough. But looks kinda noisy. I'll change the number of samples per run to $M=1000$.
+Nice enough. But looks kinda noisy. I'll change the number of samples per run to $$M=1000$$.
 
 
     M=1000
@@ -81,11 +88,11 @@ It looks kinda logarithmic. But don't trust my word for it, lets see the graph o
 ![png](2015-08-22-second-crawl_files/2015-08-22-second-crawl_12_1.png)
 
 
-That means we could try to adjust a linear model to the exponential of $K$.
+That means we could try to adjust a linear model to the exponential of $$K$$.
 
 ## Modelling
 
-First let's see that $e^K$ looks indeed linear:
+First let's see that $$e^K$$ looks indeed linear:
 
 
     plt.plot(np.exp(K),label="Exp(K)")
@@ -102,7 +109,7 @@ Now we need a library for statistical modelling, so lets call `scipy` and it's `
 
     from scipy import stats as stat
 
-Now I'll perform linear regression on $e^K$. This means that I'm trying to find numbers $a,b$ such that $e^K = a\times n+b$ plus some noise.
+Now I'll perform linear regression on $$e^K$$. This means that I'm trying to find numbers $$a,b$$ such that $$e^K = a\times n+b$$ plus some noise.
 
 
     lin_K = stat.linregress(range(1,N+1), y=np.exp(K))
@@ -141,4 +148,9 @@ By transforming back to the logarithm I get the final product:
 
 
 ![png](2015-08-22-second-crawl_files/2015-08-22-second-crawl_23_0.png)
+
+
+---
+
+Remember that you can get this [IPython Notebook](https://github.com/eardil/Blog_Code/blob/master/2015-08-22-second-crawl/2015-08-22-second-crawl.ipynb) and others at my [Github Page](https://github.com/eardil).
 
