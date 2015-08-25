@@ -1,4 +1,11 @@
-
+---
+layout:     post
+title:      "Pandas time!"
+subtitle:   "On data and visualization"
+date:       2015-08-26 12:00:00
+author:     "Eardil"
+header-img: "img/post-bg-01.jpg"
+---
 Before I move on to trying more complicated things that I would do with MATLAB (e.g. 3D plotting), I want to learn the basics of the thing I would like to do on R, namely data crunching and visualization. 
 
 For that I will use [mtcars](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/mtcars.html) database because:
@@ -9,19 +16,21 @@ For that I will use [mtcars](https://stat.ethz.ch/R-manual/R-devel/library/datas
 
 So first I need to load the `Pandas` library. This library will introduce the `DataFrame` object much like R's own `data.frame`.
 
-
-    import pandas as pd
+{% highlight python %}
+import pandas as pd
+{% endhighlight %}
 
 There's a package that brings RDatasets to Python, but I saved mtcars as a CSV (comma separated values) file because reading my own data from Python is a very important step. Which by the way is very easy:
 
-
-    cars = pd.read_csv("mtcars.csv")
+{% highlight python %}
+cars = pd.read_csv("mtcars.csv")
+{% endhighlight %}
 
 To print what I just read, there's a `head` function. It will shows us the first bunch of rows. `head(n)` will give you the first `n` rows, but let's use the default.
 
-
-    cars.head()
-
+{% highlight python %}
+cars.head()
+{% endhighlight %}
 
 
 
@@ -128,10 +137,10 @@ To print what I just read, there's a `head` function. It will shows us the first
 
 We can see that there's no name for the first column. We could add a name like "carname", but in this case the name of the car represents a single row, so maybe we should use it as a name for the row instead of just $1,2,3,\dots$
 
-
-    cars = pd.read_csv("mtcars.csv",index_col=0)
-    cars.head()
-
+{% highlight python %}
+cars = pd.read_csv("mtcars.csv",index_col=0)
+cars.head()
+{% endhighlight %}
 
 
 
@@ -234,8 +243,9 @@ If you happen to know the dataset, you'll notice that I changed the variable `am
 
 Speaking of that, let's see how the data was saved in our variable.
 
-
-    cars.info()
+{% highlight python %}
+cars.info()
+{% endhighlight %}
 
     <class 'pandas.core.frame.DataFrame'>
     Index: 32 entries, Mazda RX4 to Volvo 142E
@@ -259,9 +269,9 @@ We can see some important data on the...data (Metadata?). How each variable is s
 
 Other function that seems very useful is `describe`, which summarizes the columns in the most standard statistics: count,mean, standard deviation and quartiles.
 
-
-    cars.describe()
-
+{% highlight python %}
+cars.describe()
+{% endhighlight %}
 
 
 
@@ -395,61 +405,62 @@ Other function that seems very useful is `describe`, which summarizes the column
 
 As a shortcut for visualization, there's another cool feature of pandas: we can call plot directly to the DataFrame. This allows to plot a histogram (or whatever) of some columns directly to see what we are doing. For this we need the plotting library. 
 
-
-    import matplotlib.pyplot as plt
-    %matplotlib inline
+{% highlight python %}
+import matplotlib.pyplot as plt
+%matplotlib inline
+{% endhighlight %}
 
 To select a single column of our data, pandas uses `[]`. So for example we can get the `mpg` variable and get the histogram right out of the DataFrame object with:
 
+{% highlight python %}
+cars['mpg'].hist()
+plt.show()
 
-    cars['mpg'].hist()
-    plt.show()
 
-
-![png](2015-08-26-pandas-time_files/2015-08-26-pandas-time_15_0.png)
+![png](http://eardil.github.io/img/2015-08-26-pandas-time_files/2015-08-26-pandas-time_15_0.png)
 
 
 Now we can visualize some `pandas` functionality. For example, we can easily group by type of transmission using the `groupby` function. I take cars, select the columns 'mpg' and 'am', then apply the `groupby` function to tell `pandas` I want to group by 'am', and that I want to summarize the rest using the function mean. Finally I plot it.
 
+{% highlight python %}
+cars[['am','mpg']].groupby('am').mean().plot(kind='bar')
+plt.show()
+{% endhighlight %}
 
-    cars[['am','mpg']].groupby('am').mean().plot(kind='bar')
-    plt.show()
-
-
-![png](2015-08-26-pandas-time_files/2015-08-26-pandas-time_17_0.png)
+![png](http://eardil.github.io/img/2015-08-26-pandas-time_files/2015-08-26-pandas-time_17_0.png)
 
 
 How about a scatter plot? Maybe I would want to see the relationship between miles per gallon vs the horse power.
 
+{% highlight python %}
+plt.scatter(cars['mpg'],cars['hp'])
+plt.show()
+{% endhighlight %}
 
-    plt.scatter(cars['mpg'],cars['hp'])
-    plt.show()
-
-
-![png](2015-08-26-pandas-time_files/2015-08-26-pandas-time_19_0.png)
+![png](http://eardil.github.io/img/2015-08-26-pandas-time_files/2015-08-26-pandas-time_19_0.png)
 
 
 ### What about beautiful plots?
 
 By this time some may be missing ggplot because of its elegant style. Well, matplotlib has different possible styles, included the beloved ggplot, only by setting `style.use`
 
+{% highlight python %}
+plt.style.use('ggplot')
+plt.scatter(cars['mpg'],cars['hp'])
+plt.show()
+{% endhighlight %}
 
-    plt.style.use('ggplot')
-    plt.scatter(cars['mpg'],cars['hp'])
-    plt.show()
-
-
-![png](2015-08-26-pandas-time_files/2015-08-26-pandas-time_21_0.png)
+![png](http://eardil.github.io/img/2015-08-26-pandas-time_files/2015-08-26-pandas-time_21_0.png)
 
 
 There is also another library called `seaborn` that brings new styles to matplotlib and more visualization functions. It doesn't come with the Anaconda distribution, but it's really easy to get. You just open a terminal (cmd/powershell on windows), type `conda install seaborn` and you're done. Now you just load it to get more beautiful plots and can begin to use fun plots like the `regplot`, which performs linear regression directly in the plot. Plot, plot. I'm setting the figure size because seaborn figures come out a little bigger and 
 
+{% highlight python %}
+import seaborn as sns
+plt.figure(figsize=(5, 4))
 
-    import seaborn as sns
-    plt.figure(figsize=(5, 4))
-    
-    sns.regplot('mpg','hp',data=cars)
-
+sns.regplot('mpg','hp',data=cars)
+{% endhighlight %}
 
 
 
@@ -458,15 +469,15 @@ There is also another library called `seaborn` that brings new styles to matplot
 
 
 
-![png](2015-08-26-pandas-time_files/2015-08-26-pandas-time_23_1.png)
+![png](http://eardil.github.io/img/2015-08-26-pandas-time_files/2015-08-26-pandas-time_23_1.png)
 
 
 The dependence doesn't seem to be linear, let's try a polinomial regression.
 
-
-    plt.figure(figsize=(5, 4))
-    sns.regplot('mpg','hp',data=cars,order=2)
-
+{% highlight python %}
+plt.figure(figsize=(5, 4))
+sns.regplot('mpg','hp',data=cars,order=2)
+{% endhighlight %}
 
 
 
@@ -475,19 +486,21 @@ The dependence doesn't seem to be linear, let's try a polinomial regression.
 
 
 
-![png](2015-08-26-pandas-time_files/2015-08-26-pandas-time_25_1.png)
+![png](http://eardil.github.io/img/2015-08-26-pandas-time_files/2015-08-26-pandas-time_25_1.png)
 
 
 One of the things I didn't like about R, or more specifically R on Windows, is that plots don't seem to have any anti-aliasing. I haven't had that problem in Python, although you wouldn't notice anyway since these graphs are all un PNG format now, which would look equally great if I generated them in R. I took a screenshot with an equivalent plot generated in RStudio:
 
-``` R
+{% highlight R %}
 library(ggplot2)
 
 cars <- mtcars
 
 ggplot(data = cars, aes(x=mpg,y=hp)) + geom_point() + 
   stat_smooth(method="lm",formula = y ~ poly(x,2,raw=TRUE))
-```
+{% endhighlight %}
+
+![ew](http://eardil.github.io/img/2015-08-26-pandas-time_files/Rsmooth.png)
 
 *Look at that horrible line!*
 
@@ -495,14 +508,14 @@ If you have a workaround for turning on antialiasing on R for Windows I would ve
 
 There's a ggplot library for Python too, although I read that it is a little buggy still. It would be really convenient to use the same graphic language when moving between Python and R. I needed to install it too by running `pip install ggplot` in the terminal. Notice that the `gsize` variable is just format and it's not necessary.
 
+{% highlight python %}
+from ggplot import *
+gsize = theme_matplotlib(rc={"figure.figsize": "5, 4"}, matplotlib_defaults=False)
 
-    from ggplot import *
-    gsize = theme_matplotlib(rc={"figure.figsize": "5, 4"}, matplotlib_defaults=False)
-    
-    ggplot(aes(x='mpg',y='hp'),data = cars) + geom_point() + gsize
+ggplot(aes(x='mpg',y='hp'),data = cars) + geom_point() + gsize
+{% endhighlight %}
 
-
-![png](2015-08-26-pandas-time_files/2015-08-26-pandas-time_27_0.png)
+![png](http://eardil.github.io/img/2015-08-26-pandas-time_files/2015-08-26-pandas-time_27_0.png)
 
 
 
@@ -512,4 +525,8 @@ There's a ggplot library for Python too, although I read that it is a little bug
 
 
 
-I dropped the `stat_smooth` because there's no way to specify the model yet, apparently. Anyway there it is. I hope to
+I dropped the `stat_smooth` because there's no way to specify the model yet, apparently. Anyway there it is.
+
+---
+
+Remember that you can get this [IPython Notebook](https://github.com/eardil/Blog_Code/blob/master/2015-08-26-pandas-time/2015-08-26-pandas-time.ipynb) and others at my [Github Page](https://github.com/eardil).
